@@ -26,7 +26,8 @@ MySQL Workbench downloads:  http://dev.mysql.com/downloads/workbench/
 
 ## Create a database
 
-{% include figure.html src="http://jeffblackadar.ca/getting-started-with-mysql/getting-started-with-mysql-1.png" caption="Creating a database in MySQL Workbench" %}
+![Creating a database in MySQL Workbench](http://jeffblackadar.ca/getting-started-with-mysql/getting-started-with-mysql-1.png "Creating a database in MySQL Workbench")
+
 
 
 ## Create an R program that connects to the database
