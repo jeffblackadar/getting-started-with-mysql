@@ -44,6 +44,36 @@ USE newspaper_search_results;
 ```
 The USE statement informs MySQL Workbench that you are working with the newspaper_search_results when you run commands.
 
+## Add a table
+
+1. In MySQL Workbench, look in the left side in the **Navigator** panel, under **SCHEMAS** for **newspaper_search_results**.
+2. Right-click on **Tables** and click **Create Table**.
+3. for **Table Name:** type **tbl_newspaper_search_results**
+
+### Add columns to the table
+In general, take your time to think about table design and naming since a well designed database will be easier to work with and understand.
+Add these columns
+1. **tbl_newspaper_search_result_id** Data type: **INT**. Click PK (Primary Key), NN (Not Null) and AI (Auto Increment).  This id column will be used to relate records in this table to records in other tables.
+2. **tbl_newspaper_search_result_url** Data type: **VARCHAR(99)**. This column will store the URL of each result we gather from the search.
+3. **tbl_newspaper_search_result_date_published** Data type: **DATETIME**. This column will store the date the newspaper was published.
+4. **tbl_newspaper_search_results_search_term** Data type: **VARCHAR(45)**. This column will store the word we used to search the newspapers.
+Click the **Apply** button.
+
+All of this can be done with a command:
+```
+CREATE TABLE `newspaper_search_results`.`tbl_newspaper_search_results` (
+  `tbl_newspaper_search_result_id` INT NOT NULL AUTO_INCREMENT,
+  `tbl_newspaper_search_result_url` VARCHAR(99) NULL,
+  `tbl_newspaper_search_result_date_published` DATETIME NULL,
+  `tbl_newspaper_search_results_search_term` VARCHAR(45) NULL,
+  PRIMARY KEY (`tbl_newspaper_search_result_id`));
+
+```
+  
+
+
+newspaper_search_results
+
 ## Add a user to connect to the database
 
 We are adding a new user so that this user ID is used only to connect to the new database, limiting exposure in case its password is compromised.
