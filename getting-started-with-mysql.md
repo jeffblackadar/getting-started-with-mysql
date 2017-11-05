@@ -69,10 +69,8 @@ CREATE TABLE `newspaper_search_results`.`tbl_newspaper_search_results` (
   PRIMARY KEY (`tbl_newspaper_search_result_id`));
 
 ```
-  
 
 
-newspaper_search_results
 
 ## Add a user to connect to the database
 
@@ -95,17 +93,13 @@ Click the **Add Account** button and complete the Details for account newuser di
 
 
 
-
-
-
-
-
-
-
-
 ## Create an R program that connects to the database
 
 In RStudio create a program named newspaper_search.R
+
+We will use RMySQL to connect to MySQL.  Documentation is here:
+
+https://cran.r-project.org/web/packages/RMySQL/RMySQL.pdf
 
 If you don't have the library RRMySQL installed, install it using the RStudio Console per below:
 ```
@@ -117,49 +111,39 @@ Add this statement to the newspaper_search.R program
 library(RMySQL)
 ```
 
+### Connecting to the database with a password.
 
-You can make headers, and see that they show up with the same styling that a published lesson has.
+We will connect to the database at first using a password.  Use a variable to store the password.  Each time you start R you'll need to reset this variable, but that;'s a little better than publishing a hardcoded password when you share your programs, like you may do using GitHub.
 
-Code blocks work too:
+In the RStudio console type something like below, replacing SomethingDifficult with the password you created for newspaper_search_results_user.
 
-```bash
-echo "hello world!"
+> localuserpassword<-"SomethingDifficult"
+
+Run this program in RStudio
 ```
-
-I can make [absolute links as normal](http://programminghistorian.org), though if I try to make a [relative link](../lessons/counting-frequencies) to a published lesson on the Programming Historian, that won't work, because this repo will only contain lessons that are works in progress.
-
-However, I can add images for my lesson to the images directory here on the submissions repo, and then use the standard figure syntax to include it:
-
-{% include figure.html src="../images/sample-lesson-1.png" caption="A sample image for my sample lesson, taken from Wikipedia entry for Digital History" %}
-
-Voila!
-
-## Another Sample Header
-
-Everything appears to work when I put another sample header, too. This will allow reviewers to examine a lesson and see more or less exactly what it will look like.[^1]
-
-## Tables
-
-Here's a sample table from a different lesson:
+library(RMySQL)
+mydb = dbConnect(MySQL(), user='newspaper_search_results_user', password=localuserpassword, dbname='newspaper_search_results', host='localhost')
+dbListTables(mydb)
+```
+In the console you should see:
+```
+[1] "tbl_newspaper_search_results"
+```
+Success! you have connected to the database.
 
 
-| Command | What It Does |
-|---------|--------------|
-| `pwd` | Prints the 'present working directory,' letting you know where you are. |
-| `ls` | Lists the files in the current directory
-| `man *` | Lists the manual for the command, substituted for the `*`
-| `cd *` | Changes the current directory to `*`
-| `mkdir *` | Makes a directory named `*`
-| `open` or `explorer` | On OS X, `open` followed by a file opens it; in Windows, the command `explorer` followed by a file name does the same thing.
-| `cat *` | `cat` is a versatile command. It will read a file to you if you substitute a file for `*`, but can also be used to combine files.
-| `head *` | Displays the first ten lines of `*`
-| `tail *` | Displays the last ten lines of `*`
-| `mv` | Moves a file
-| `cp` | Copies a file
-| `rm` | Deletes a file
-| `vim` | Opens up the `vim` document editor.
 
-[^1]: I say "more or less" so as not to court the vengeance of the Markdown gods!
+
+
+
+
+
+
+
+
+
+
+
 
 ## Credits and Citation
 
