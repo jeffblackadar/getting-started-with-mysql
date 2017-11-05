@@ -1,2 +1,2 @@
-# getting-started_with-mysql
+# getting-started-with-mysql
 This is a draft of a lesson about using MySQL and R (and later Python)
