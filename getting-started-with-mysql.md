@@ -24,7 +24,24 @@ MtSQL Installation instructions:  https://dev.mysql.com/doc/workbench/en/wb-inst
 MySQL Workbench downloads:  http://dev.mysql.com/downloads/workbench/
 
 
+## Create a database
 
+{% include figure.html src="http://jeffblackadar.ca/getting-started-with-mysql/getting-started-with-mysql-1.png" caption="Creating a database in MySQL Workbench" %}
+
+
+## Create an R program that connects to the database
+
+In RStudio create a program named newspaper_search.R
+
+If you don't have the library RRMySQL installed, install it using the RStudio Console per below:
+```
+install.packages("RMySQL")
+```
+Add this statement to the newspaper_search.R program
+
+```
+library(RMySQL)
+```
 
 
 You can make headers, and see that they show up with the same styling that a published lesson has.
