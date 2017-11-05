@@ -1,7 +1,7 @@
 ---
 title: Getting Started With Mysql
 authors:
-- Caleb Jeff Blackadar
+- Jeff Blackadar
 date: 2017-11-05
 reviewers:
 - (not yet assigned)
