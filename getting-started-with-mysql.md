@@ -9,15 +9,23 @@ layout: lesson
 difficulty: 1
 ---
 
+*draft* This is a draft.  More will be added, edits made, mistakes corrected.  If you have feedback on the draft I welcome it jeffblackadar( at}gmail{dot)com.
+
 ## Getting Started With MySQL
 
 ## Contents
 
 ## Introduction
 
-## Downloading and Setting MySQL
+## Downloading and Installing MySQL Workbench
 
-### Installation Steps via the GUI interface
+MtSQL Installation instructions:  https://dev.mysql.com/doc/workbench/en/wb-installing.html
+
+MySQL Workbench downloads:  http://dev.mysql.com/downloads/workbench/
+
+
+
+
 
 You can make headers, and see that they show up with the same styling that a published lesson has.
 
