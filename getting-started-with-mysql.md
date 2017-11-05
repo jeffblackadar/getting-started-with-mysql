@@ -56,9 +56,10 @@ Click the **Add Account** button and complete the Details for account newuser di
 3. Limit to hosts matching: **Localhost**
 4. Enter and confirm a password
 5. Click on the **Administrative Roles** tab.  Make sure nothing is checked.  This account is for accessing the database only.
-5. Click on the **Schema Priviledges** tab and click **Add Entry**
-6. In the **New Schema Priviledge Definition** diablog box, click the **Selected schema:** radio button and select **newspaper_search_results**.
-7. Click all of the 
+6. Click on the **Schema Priviledges** tab and click **Add Entry**
+7. In the **New Schema Priviledge Definition** diablog box, click the **Selected schema:** radio button and select **newspaper_search_results**.
+8. Click all of the Object Rights: SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW as per the image below.
+9. Click the **Apply** button.
 
 ![setting permissions for new account.](http://jeffblackadar.ca/getting-started-with-mysql/getting-started-with-mysql-2.png "setting permissions for new account")
 
