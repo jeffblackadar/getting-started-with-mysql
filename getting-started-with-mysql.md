@@ -25,8 +25,50 @@ MySQL Workbench downloads:  http://dev.mysql.com/downloads/workbench/
 
 
 ## Create a database
-
 ![Creating a database in MySQL Workbench](http://jeffblackadar.ca/getting-started-with-mysql/getting-started-with-mysql-1.png "Creating a database in MySQL Workbench")
+
+Using MySQL Workbench perform these steps:
+1. In the Query window type:
+```
+CREATE DATABASE newspaper_search_results;
+```
+2. Run the CREATE DATABASE command.  Click on the lightning bolt or using the menu click Query | Execute Current Statement.
+3. Beside SCHEMAS, if necessary, click the refresh icon.
+4. The new database newspaper_search_results should be visible under SCHEMAS
+
+
+
+In the Query window type:
+```
+USE newspaper_search_results;
+```
+The USE statement informs MySQL Workbench that you are working with the newspaper_search_results when you run commands.
+
+## Add a user to connect to the database
+
+We are adding a new user so that this user ID is used only to connect to the new database, limiting exposure in case its password is compromised.
+
+In the MySQL Workbench menu click **Server | Users and Privileges**
+
+Click the **Add Account** button and complete the Details for account newuser dialog box:
+1. login name: **newspaper_search_results_user**
+2. Authentication Type
+3. Limit to hosts matching: **Localhost**
+4. Enter and confirm a password
+5. Click on the **Administrative Roles** tab.  Make sure nothing is checked.  This account is for accessing the database only.
+5. Click on the **Schema Priviledges** tab and click **Add Entry**
+6. In the **New Schema Priviledge Definition** diablog box, click the **Selected schema:** radio button and select **newspaper_search_results**.
+7. Click all of the 
+
+![setting permissions for new account.](http://jeffblackadar.ca/getting-started-with-mysql/getting-started-with-mysql-2.png "setting permissions for new account")
+
+
+
+
+
+
+
+
 
 
 
