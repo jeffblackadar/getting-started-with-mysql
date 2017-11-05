@@ -1,5 +1,5 @@
 ---
-title: Getting Started With Mysql
+title: Getting Started With MySQL
 authors:
 - Jeff Blackadar
 date: 2017-11-05
@@ -9,7 +9,15 @@ layout: lesson
 difficulty: 1
 ---
 
-## Getting Started With Mysql
+## Getting Started With MySQL
+
+## Contents
+
+## Introduction
+
+## Downloading and Setting MySQL
+
+### Installation Steps via the GUI interface
 
 You can make headers, and see that they show up with the same styling that a published lesson has.
 
@@ -53,4 +61,18 @@ Here's a sample table from a different lesson:
 | `vim` | Opens up the `vim` document editor.
 
 [^1]: I say "more or less" so as not to court the vengeance of the Markdown gods!
+
+## Credits and Citation
+
+Made a copy of the sample lesson from here:
+
+https://github.com/programminghistorian/ph-submissions/blob/gh-pages/lessons/sample-lesson.md
+
+Based lesson structure on this:
+
+https://programminghistorian.org/lessons/geoparsing-text-with-edinburgh
+
+## References
+
+Ullman, Larry. PHP and MySQL For Dyanamic Web Sites
 
