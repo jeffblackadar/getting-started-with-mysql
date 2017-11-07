@@ -243,3 +243,4 @@ close(outputFileCsvCon)
 close(outputFileHTMLListCon)
 dbDisconnect(mydb)
 
+#select year(tbl_newspaper_search_result_date_published),month(tbl_newspaper_search_result_date_published),count(concat(month(tbl_newspaper_search_result_date_published)," ",year(tbl_newspaper_search_result_date_published))) from tbl_newspaper_search_results group by year(tbl_newspaper_search_result_date_published),month(tbl_newspaper_search_result_date_published) order by year(tbl_newspaper_search_result_date_published),month(tbl_newspaper_search_result_date_published);
