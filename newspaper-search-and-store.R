@@ -1,6 +1,13 @@
 library(RMySQL)
-mydb = dbConnect(MySQL(), user='newspaper_search_results_user', password=localuserpassword, dbname='newspaper_search_results', host='localhost')
-dbListTables(mydb)
+
+#setwd("C:/a_orgs/carleton/hist3814/R/graham_fellowship")
+
+#R needs a full path to find the settings file
+rmysql.settingsfile<-"C:\\ProgramData\\MySQL\\MySQL Server 5.7\\newspaper_search_results.cnf"
+
+rmysql.db<-"newspaper_search_results"
+storiesDb<-dbConnect(RMySQL::MySQL(),default.file=rmysql.settingsfile,group=rmysql.db) 
+
 
 # to run this, in your R working directory make a directory that matches the variable "workingSubDirectory" (or change below)
 
@@ -19,19 +26,29 @@ searchDateRange <- paste("&range%5Bmin%5D=",searchDateRangeMin,"T00%3A00%3A00Z&r
 #German Submarine
 #?alt=full_text%3A"Food+Production+society"+OR+full_text%3A"Food+Production+societies"
 #searchTerms <- paste("search?alt=full_text%3A","%22Food+Production+society%22","OR","+full_text%3A","%22Food+Production+societies%22",sep="")
-searchTerms <- paste("search?alt=full_text%3A","%22German+Submarine%22",sep="")
-searchTermsSimple <- "German+Submarine"
+#searchTerms <- paste("search?alt=full_text%3A","%22German+Submarine%22",sep="")
+#searchTermsSimple <- "German+Submarine"
+#searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
+#print(searchURL)
+#workingSubDirectory <- "working"
+
+
+#Allotment Garden
+#?alt=full_text%3A"Allotment"+AND+full_text%3A"Garden"
+searchTerms <- paste("search?alt=full_text%3A","%22Allotment%22+AND+full_text%3A%22Garden%22",sep="")
+searchTermsSimple <- "AllotmentAndGarden"
 searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
 print(searchURL)
-workingSubDirectory <- "working"
+workingSubDirectory <- "allotment-garden"
+
+
+
 
 #hist4500-royal-horticultural-society
 # searchTerms = paste("search?alt=full_text%3A","%22royal+horticultural+society%22",sep="")
 # searchURL = paste(searchBaseURL,searchTerms,searchDateRange,sep="")
 # print(searchURL) 
 # workingSubDirectory = "hist4500-royal-horticultural-society"
-
-
 
 
 ### functions
@@ -49,8 +66,13 @@ generateFootNote<-function(articleTitle,newspaperName, editionDate, ArchiveName,
 
 outputFileCsv <- paste(workingSubDirectory,"/1",workingSubDirectory,"_papers.csv",sep="")
 outputFileCsvCon<-file(outputFileCsv, open = "w")
-lineOut<-paste("Entry Number","\",\"","Entry Id","\"","Entry Url","\",\"", "Newspaper Title","\",\"","Article Title","\",\"","Entry Updated","\",\"","Date Published","\",\"","Page Number","\",\"","Citation","\",\"","Article start","\",\"","Notice Text","\"",sep="")
+lineOut<-paste("\"Entry Number","\",\"","Entry Id","\"","Entry Url","\",\"", "Newspaper Title","\",\"","Article Title","\",\"","Entry Updated","\",\"","Date Published","\",\"","Page Number","\",\"","Citation","\",\"","Article start","\",\"","Notice Text","\"",sep="")
 writeLines(lineOut,outputFileCsvCon)
+
+sampleDataFileCsv <- paste(workingSubDirectory,"/1",workingSubDirectory,"_sample_data.csv",sep="")
+sampleDataFileCsvCon<-file(sampleDataFileCsv, open = "w")
+lineOut<-paste("\"story_title\",\"story_date_published\",\"story_url\",\"search_term_used\"",sep="")
+writeLines(lineOut,sampleDataFileCsvCon)
 
 
 outputFileHTMLList <- paste(workingSubDirectory,"/1",workingSubDirectory,"_papers.html",sep="")
@@ -123,32 +145,39 @@ for(gatherPagesCounter in 1:(floor(numberResults/12)+1)){
       #processArticleReturn=processArticleWebPage(entryUrl, entryTitle, entryId,entryPublished)
       #articleFile=processArticleReturn[1]
       
-      footNote=generateFootNote(entryTitle,entryPaperTitle, entryPublished, newspaperArchiveName, entryUrl)
-      lineOut<-paste(entriesProcessed,",\"",entryId,"\",\"",entryUrl,"\",\"",entryPaperTitle,"\",\"",entryTitle,"\",\"",entryUpdated,"\",\"",entryPublished,"\",\"",entryPage,"\",\"",footNote,"\",\"",noticeText,"\"",sep="")
-      print (lineOut)
-      
-      writeLines(lineOut,outputFileCsvCon)
-      
-      writeLines(paste(entriesProcessed,"<a href=\"",entryUrl," ","\">","web","</a> ",entryTitle,"  <br>",sep=""),outputFileHTMLListCon)
-
       tmpleft = gregexpr(pattern='  ',entryPublished)
       entryPublishedNumberPronounciation = substr(entryPublished, tmpleft[[1]]-2, tmpleft[[1]]-1)
       entryPublishedDate = as.Date(entryPublished, paste("%d",entryPublishedNumberPronounciation,"     %B     %Y",sep="") )
       print (entryPublishedDate)
       
+      #clean up entryTitle
       entryTitle = gsub("'", "&apos;", entryTitle)
       entryTitle = gsub("’", "&apos;", entryTitle)
+      entryTitle = gsub("\\", "/", entryTitle, fixed=TRUE)
+      entryTitle = gsub("\"", "&quote;", entryTitle, fixed=TRUE)
+
+      #csv of data
+      footNote=generateFootNote(entryTitle,entryPaperTitle, entryPublishedDate, newspaperArchiveName, entryUrl)
+      lineOut<-paste("\"",entriesProcessed,"\",\"",entryId,"\",\"",entryUrl,"\",\"",entryPaperTitle,"\",\"",entryTitle,"\",\"",entryUpdated,"\",\"",entryPublishedDate,"\",\"",entryPage,"\",\"",footNote,"\",\"",noticeText,"\"",sep="")
+      print (lineOut)
+      writeLines(lineOut,outputFileCsvCon)
+      
+      #sample data
+      lineOut<-paste("\"",entryTitle,"\",\"",entryPublishedDate,"\",\"",entryUrl,"\",\"",searchTermsSimple,"\"",sep="")
+      writeLines(lineOut,sampleDataFileCsvCon)
+      
+      #html file
+      writeLines(paste(entriesProcessed,"<a href=\"",entryUrl," ","\">","web","</a> ",entryTitle,"  <br>",sep=""),outputFileHTMLListCon)
 
       
-      
       query<-paste(
-        "INSERT INTO tbl_newspaper_search_results (story_title,story_date_published,story_url,search_term_used) VALUES('",entryTitle,"','",entryPublishedDate,"',LEFT(RTRIM('",
+        "INSERT INTO tbl_newspaper_search_results (story_title,story_date_published,story_url,search_term_used) VALUES(LEFT(RTRIM('",entryTitle,"'),99),'",entryPublishedDate,"',LEFT(RTRIM('",
         entryUrl,
         "'),99),'",searchTermsSimple,"')",
         sep = ''
       )
       print (query)
-      rsInsert = dbSendQuery(mydb, query)
+      rsInsert = dbSendQuery(storiesDb, query)
 
     }
   }
@@ -164,6 +193,7 @@ for(gatherPagesCounter in 1:(floor(numberResults/12)+1)){
 
 close(outputFileCsvCon)
 close(outputFileHTMLListCon)
-dbDisconnect(mydb)
+close(sampleDataFileCsvCon)
+dbDisconnect(storiesDb)
 
 #select year(tbl_newspaper_search_result_date_published),month(tbl_newspaper_search_result_date_published),count(concat(month(tbl_newspaper_search_result_date_published)," ",year(tbl_newspaper_search_result_date_published))) from tbl_newspaper_search_results group by year(tbl_newspaper_search_result_date_published),month(tbl_newspaper_search_result_date_published) order by year(tbl_newspaper_search_result_date_published),month(tbl_newspaper_search_result_date_published);
