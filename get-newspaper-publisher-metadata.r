@@ -124,10 +124,9 @@ for (entriesCounter in 1:length(thepage)){
         geocode("Cardif, Wales")
       },
       finally={
-        #geocode("Cardif, Wales")
+        
       }
     ) 
-    
     
     
     NewspaperDataPlaceLat = NewspaperDataPlaceGeoCode[[2]]

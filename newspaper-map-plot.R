@@ -9,13 +9,10 @@ newspapersDb<-dbConnect(RMySQL::MySQL(),default.file=rmysql.settingsfile,group=r
 
 setwd("C:/a_orgs/carleton/hist3814/R/getting-started-with-mysql")
 
-
 query="SELECT `newspaper_title`,`newspaper_place_lat`,`newspaper_place_long` FROM `tbl_newspapers`;"
 rs = dbSendQuery(newspapersDb,query)
 dbRows<-dbFetch(rs)
 df <- data.frame(x=dbRows$newspaper_place_long, y=dbRows$newspaper_place_lat,newspaperTitle=dbRows$newspaper_title)
-
-
 
 #Thanks to: https://rpubs.com/jiayiliu/ggmap_examples
 
