@@ -11,8 +11,9 @@ storiesDb<-dbConnect(RMySQL::MySQL(),default.file=rmysql.settingsfile,group=rmys
 #optional - confirms we connected to the database
 dbListTables(storiesDb)
 
+#Assemble the query
 
-entryTitle <- "THE LOST LUSITANIA."
+entryTitle <- "THE LOST LUSITANIA'S RUDDER."
 
 entryPublished <- "21 MAY 1916"
 #convert the sting value to a date to store it into the database

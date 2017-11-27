@@ -22,24 +22,25 @@ searchDateRange <- paste("&range%5Bmin%5D=",searchDateRangeMin,"T00%3A00%3A00Z&r
 # searchURL = paste(searchBaseURL,searchTerms,searchDateRange,sep="")
 # print(searchURL) 
 # workingSubDirectory = "wales2"
-
-#German Submarine
 #?alt=full_text%3A"Food+Production+society"+OR+full_text%3A"Food+Production+societies"
 #searchTerms <- paste("search?alt=full_text%3A","%22Food+Production+society%22","OR","+full_text%3A","%22Food+Production+societies%22",sep="")
-#searchTerms <- paste("search?alt=full_text%3A","%22German+Submarine%22",sep="")
-#searchTermsSimple <- "German+Submarine"
-#searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
-#print(searchURL)
-#workingSubDirectory <- "working"
+
+
+#German Submarine
+searchTerms <- paste("search?alt=full_text%3A","%22German+Submarine%22",sep="")
+searchTermsSimple <- "German+Submarine"
+searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
+print(searchURL)
+workingSubDirectory <- "working"
 
 
 #Allotment Garden
 #?alt=full_text%3A"Allotment"+AND+full_text%3A"Garden"
-searchTerms <- paste("search?alt=full_text%3A","%22Allotment%22+AND+full_text%3A%22Garden%22",sep="")
-searchTermsSimple <- "AllotmentAndGarden"
-searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
-print(searchURL)
-workingSubDirectory <- "allotment-garden"
+#searchTerms <- paste("search?alt=full_text%3A","%22Allotment%22+AND+full_text%3A%22Garden%22",sep="")
+#searchTermsSimple <- "AllotmentAndGarden"
+#searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
+#print(searchURL)
+#workingSubDirectory <- "allotment-garden"
 
 
 
