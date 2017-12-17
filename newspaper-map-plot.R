@@ -16,6 +16,7 @@ rs = dbSendQuery(newspapersDb,query)
 dbRows<-dbFetch(rs)
 df <- data.frame(x=dbRows$newspaper_place_long, y=dbRows$newspaper_place_lat,newspaperTitle=dbRows$newspaper_title)
 
+#opens a map of Wales
 mapWales <- get_map(location = c(lon = -4.08292, lat = 52.4153),color = "color",source = "google",maptype = "roadmap",zoom = 8)
 
 ggmap(mapWales, base_layer = ggplot(aes(x = x, y = y, size = 3), data = df))  + geom_point(color="blue", alpha=0.3)
