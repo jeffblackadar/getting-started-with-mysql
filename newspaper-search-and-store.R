@@ -27,20 +27,20 @@ searchDateRange <- paste("&range%5Bmin%5D=",searchDateRangeMin,"T00%3A00%3A00Z&r
 
 
 #German Submarine
-searchTerms <- paste("search?alt=full_text%3A","%22German+Submarine%22",sep="")
-searchTermsSimple <- "German+Submarine"
-searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
-print(searchURL)
-workingSubDirectory <- "working"
+#searchTerms <- paste("search?alt=full_text%3A","%22German+Submarine%22",sep="")
+#searchTermsSimple <- "German+Submarine"
+#searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
+#print(searchURL)
+#workingSubDirectory <- "working"
 
 
 #Allotment Garden
 #?alt=full_text%3A"Allotment"+AND+full_text%3A"Garden"
-#searchTerms <- paste("search?alt=full_text%3A","%22Allotment%22+AND+full_text%3A%22Garden%22",sep="")
-#searchTermsSimple <- "AllotmentAndGarden"
-#searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
-#print(searchURL)
-#workingSubDirectory <- "allotment-garden"
+searchTerms <- paste("search?alt=full_text%3A","%22Allotment%22+AND+full_text%3A%22Garden%22",sep="")
+searchTermsSimple <- "AllotmentAndGarden"
+searchURL <- paste(searchBaseURL,searchTerms,searchDateRange,sep="")
+print(searchURL)
+workingSubDirectory <- "allotment-garden"
 
 
 
@@ -128,7 +128,17 @@ for(gatherPagesCounter in 1:(floor(numberResults/12)+1)){
       entryPaperTitle = trimws(gsub("</a>","",thepage[entriesCounter+3]))
       print(entryPaperTitle)
       
+      tmpline = thepage[entriesCounter+2]
+      tmpleft = gregexpr(pattern ='browse/',tmpline)
+      tmpright = gregexpr(pattern ='>',tmpline)
+      entryPaperID = substr(tmpline, tmpleft[[1]]+7, tmpright[[1]]-2)
+      print(entryPaperID)
+      
     }
+    
+    
+    #<div class="col-xs-12 col-sm-8 no-padding">
+      
     if(thepage[entriesCounter] == '<li id="result-meta-date" class="col-xs-6 col-sm-2 no-padding">')  {
     
       # date
@@ -172,9 +182,9 @@ for(gatherPagesCounter in 1:(floor(numberResults/12)+1)){
 
       
       query<-paste(
-        "INSERT INTO tbl_newspaper_search_results (story_title,story_date_published,story_url,search_term_used) VALUES(LEFT(RTRIM('",entryTitle,"'),99),'",entryPublishedDate,"',LEFT(RTRIM('",
+        "INSERT INTO tbl_newspaper_search_results (story_title,story_date_published,story_url,search_term_used, newspaper_id) VALUES(LEFT(RTRIM('",entryTitle,"'),99),'",entryPublishedDate,"',LEFT(RTRIM('",
         entryUrl,
-        "'),99),'",searchTermsSimple,"')",
+        "'),99),'",searchTermsSimple,"',",entryPaperID,")",
         sep = ''
       )
       print (query)
