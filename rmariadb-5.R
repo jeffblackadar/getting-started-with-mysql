@@ -1,4 +1,3 @@
-
 library(RMariaDB)
 rmariadb.settingsfile<-"C:\\ProgramData\\MySQL\\MySQL Server 8.0\\newspaper_search_results.cnf"
 
