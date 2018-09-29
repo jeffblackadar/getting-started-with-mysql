@@ -1,4 +1,3 @@
-
 library(RMariaDB)
 rmariadb.settingsfile<-"C:\\ProgramData\\MySQL\\MySQL Server 8.0\\newspaper_search_results.cnf"
 
@@ -10,10 +9,18 @@ setwd("C:\\a_orgs\\carleton\\hist3814\\R\\getting-started-with-mysql")
 # read in the sample data from a newspaper search of Allotment And Garden
 sampleGardenData <- read.csv(file="sample-data-allotment-garden.csv", header=TRUE, sep=",")
 
+# The story_title column in the database table can store values up to 99 characters long.  
+# This statement trims any story_titles that are any longer to 99 characters.
+sampleGardenData$story_title <- substr(sampleGardenData$story_title,0,99)
+
 dbWriteTable(storiesDb, value = sampleGardenData, row.names = FALSE, name = "tbl_newspaper_search_results", append = TRUE ) 
 
 # read in the sample data from a newspaper search of German+Submarine
 sampleSubmarineData <- read.csv(file="sample-data-submarine.csv", header=TRUE, sep=",")
+
+# The story_title column in the database table can store values up to 99 characters long.  
+# This statement trims any story_titles that are any longer to 99 characters.
+sampleSubmarineData$story_title <- substr(sampleSubmarineData$story_title,0,99)
 
 dbWriteTable(storiesDb, value = sampleSubmarineData, row.names = FALSE, name = "tbl_newspaper_search_results", append = TRUE ) 
 

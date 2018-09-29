@@ -6,7 +6,11 @@ storiesDb<-dbConnect(RMariaDB::MariaDB(),default.file=rmariadb.settingsfile,grou
 
 searchTermUsed="German+Submarine"
 # Query a count of the number of stories matching searchTermUsed that were published each month
-query<-paste("SELECT ( COUNT(CONCAT(MONTH(story_date_published),' ',YEAR(story_date_published)))) as 'count' FROM tbl_newspaper_search_results   WHERE search_term_used='",searchTermUsed,"'   GROUP BY YEAR(story_date_published),MONTH(story_date_published)   ORDER BY YEAR(story_date_published),MONTH(story_date_published);",sep="")
+query<-paste("SELECT ( COUNT(CONCAT(MONTH(story_date_published), ' ',YEAR(story_date_published)))) as 'count' 
+             FROM tbl_newspaper_search_results
+             WHERE search_term_used='",searchTermUsed,"'
+             GROUP BY YEAR(story_date_published),MONTH(story_date_published)
+             ORDER BY YEAR(story_date_published),MONTH(story_date_published);",sep="")
 print(query)
 rs = dbSendQuery(storiesDb,query)
 dbRows<-dbFetch(rs)
@@ -17,7 +21,16 @@ countOfStories<-c(as.integer(dbRows$count))
 qts1 = ts(countOfStories, frequency = 12, start = c(1914, 8))
 print(qts1)
 #Plot the qts1 time series data with line width of 3 in the color red.
-plot(xlim=c(1914,1919), ylim=c(0,150), qts1, lwd=3,col = "red",      xlab="Month of the war",     ylab="Number of newspaper stories",      main=paste("Number of stories in Welsh newspapers matching the search terms listed below.",sep=""),     sub="Search term legend: Red = German+Submarine. Green = Allotment And Garden.")
+plot(xlim=c(1914,1919), 
+     ylim=c(0,150), 
+     qts1, 
+     lwd=3,
+     col = "red",
+     xlab="Month of the war",
+     ylab="Number of newspaper stories",
+     main=paste("Number of stories in Welsh newspapers matching the search terms listed below.",sep=""),
+     sub="Search term legend: Red = German+Submarine. Green = Allotment And Garden.")
+
 searchTermUsed="AllotmentAndGarden"
 #Query a count of the number of stories matching searchTermUsed that were published each month
 query<-paste("SELECT (  COUNT(CONCAT(MONTH(story_date_published),' ',YEAR(story_date_published)))) as 'count'   FROM tbl_newspaper_search_results   WHERE search_term_used='",searchTermUsed,"'   GROUP BY YEAR(story_date_published),MONTH(story_date_published)   ORDER BY YEAR(story_date_published),MONTH(story_date_published);",sep="")
