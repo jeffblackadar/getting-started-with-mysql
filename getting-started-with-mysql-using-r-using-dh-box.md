@@ -56,7 +56,7 @@ In this tutorial you will make a database of newspaper stories that contain word
 The tutorial will use the virtual environment [DH Box](http://dhbox.org).
 R, R Studio and the MySQL database are the pieces of software required for this lesson. This software is available on DH Box. 
 
-Go to [DH Box](http://dhbox.org) and sign up for an account. If you have a different DH Box environt available to you, use that.
+Go to [DH Box](http://dhbox.org) and sign up for an account. If you have a different DH Box environment available to you, use that.
 
 ## R
 In their lesson [Basic Text Processing in R](/lessons/basic-text-processing-in-r)[^3], Taylor Arnold and Lauren Tilton provide an excellent summary of the knowledge of R required for this lesson.  Only basic knowledge of R is assumed. Taryn Dewar's lesson ['R Basics with Tabular Data']( /lessons/r-basics-with-tabular-data)[^4]
@@ -80,53 +80,76 @@ Here is a sample table with a row of data that represents a record.
 
 ## Open a MySQL session.
 
-Open MySQL Workbench.  Double-click on the *Local Instance MySQL57*. (on a Mac this may appear as *Local Instance 3306*.) You may be prompted for the root password created in steps above.  After opening the Local Instance MySQL57 you should see a screen similar to the picture below.  On some Macs, a Query Tab will already be open; if it is not, open a Query Tab by doing *File > New Query Tab*.
+In DH Box click Command Line and log in:
+
+```
+63325939cc31 login: demonstration
+Password: 
+```
+At the Command Line prompt, enter **sudo mysql** to start MySQL:
+```
+demonstration@63325939cc31:~$ sudo mysql
+[sudo] password for demonstration: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.5.49-0ubuntu0.14.04.1 (Ubuntu)
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+mysql> 
+```
+## MySQL Help
+
+To see help, at the **mysql>** prompt enter **?**.
 
 ## CREATE DATABASE
 
-Now we will create a new database. Using MySQL Workbench perform these steps:
-1. In the **Query window** type:
+1. At the **mysql>** prompt enter:
 ```
 CREATE DATABASE newspaper_search_results;
 ```
-2. Run the CREATE DATABASE command.  Click on the **lightning bolt** or using the menu, click *Query* and then *Execute Current Statement*.
-3. The new database **newspaper_search_results** should be visible under **SCHEMAS**, on the lower left of the screen. If you don't already see an item called newspaper_search_results, click the refresh icon. (See screenshot below.)
 
-(See below:)
-
-{% include figure.html filename="getting-started-with-mysql-1.png" caption="CREATE a database in MySQL Workbench" %}
+2. Check that the database was created.  At the **mysql>** prompt type: **SHOW SCHEMAS;**
+```
+mysql> SHOW SCHEMAS;
++--------------------------+
+| Database                 |
++--------------------------+
+| information_schema       |
+| mysql                    |
+| newspaper_search_results |
+| omeka                    |
+| performance_schema       |
++--------------------------+
+5 rows in set (0.00 sec)
+```
+3. The new database **newspaper_search_results** should be visible in the list of databases.
 
 ## USE database
 
-Next, we will enter a USE statement to inform MySQL Workbench which database to use. This becomes more important when you have you have more than one database on your machine.
+Next, we will enter a USE statement to inform MySQL which database we want to work with. This becomes more important when you have you have more than one database on your machine.
 
-In the Query window, delete all of the CREATE DATABASE command and type:
+At the **mysql>** prompt enter:
 ```
 USE newspaper_search_results;
 ```
-Again, click on the **lightning bolt** or using the menu, click *Query* and then *Execute Current Statement*. You can also use a keyboard command for this. On Mac it is Command+Return. On a PC use Ctrl+Shift+Enter. From this point on in the lesson, each time you enter a command into the Query Window you will run it this way.
-
-(See below:)
-
-{% include figure.html filename="getting-started-with-mysql-25.png" caption="USE a database in MySQL Workbench" %}
 
 # Add a table
 
-1. In MySQL Workbench, look in the left side in the **Navigator** panel, under **SCHEMAS** for **newspaper_search_results**.
-2. Right-click on **Tables** and click **Create Table**.
-3. for **Table Name:** type **tbl_newspaper_search_results**
+In the database **newspaper_search_results** we will create a table named **tbl_newspaper_search_results**.
 
-## Add columns to the table
+## Columns in the table
 
-Add these columns:
-1. **id** Data type: **INT**. Click PK (Primary Key), NN (Not Null) and AI (Auto Increment).  This id column will be used to relate records in this table to records in other tables.
+The new table will have these columns:
+1. **id** Data type: **INT**. This id column is also PK (Primary Key), NN (Not Null) and AI (Auto Increment).  The id column will be used to relate records in this table to records in other tables.
 2. **story_title** Data type: **VARCHAR(99)**. This column will store the title of each article result we gather from the search.
 3. **story_date_published** Data type: **DATETIME**. This column will store the date the newspaper was published.
 4. **story_url** Data type: **VARCHAR(99)**. This column will store the URL of each result we gather from the search.
 5. **search_term_used** Data type: **VARCHAR(45)**. This column will store the word we used to search the newspapers.
-Click the **Apply** button.
 
-All of the above steps can be done with a command if you prefer.  This command could be run in the Query window to create the table with the columns noted below.
+To create the new table with these columns, at the **mysql>** prompt enter:
 
 ```
 CREATE TABLE newspaper_search_results.tbl_newspaper_search_results (
@@ -140,13 +163,28 @@ PRIMARY KEY (id));
 ```
 *Tip: Take your time to think about table design and naming since a well designed database will be easier to work with and understand.*
 
+### Verify the columns in the table
+
+At the **mysql>** prompt enter **SHOW COLUMNS FROM tbl_newspaper_search_results;**
+```
+mysql> SHOW COLUMNS FROM tbl_newspaper_search_results;
++----------------------+-------------+------+-----+---------+----------------+
+| Field                | Type        | Null | Key | Default | Extra          |
++----------------------+-------------+------+-----+---------+----------------+
+| id                   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| story_title          | varchar(99) | YES  |     | NULL    |                |
+| story_date_published | datetime    | YES  |     | NULL    |                |
+| story_url            | varchar(99) | YES  |     | NULL    |                |
+| search_term_used     | varchar(45) | YES  |     | NULL    |                |
++----------------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+```
+The columns in the table you created should match what is above.
+
 ## Add a user to connect to the database
 
 A user is an account that has permission to connect to a database. Below, we are adding a new user so that this account connects only to the new database. Using this user account for one connection to this database limits exposure to other databases in case the password for this user is compromised. Giving a user the least privileges it needs to perform what you need it to do reduces the risk if someone else learns your user's password. For example, if a user can only read a database, it is less of a risk if the password is cracked than for a user that can also change or delete the database.
 
-In the MySQL Workbench menu click **Server** and then **Users and Privileges**
-
-**Mac users** Some Mac computers, like my testing laptop, don't display the **Schema Privileges** panel correctly.  See the note below the screenshot if this happens to you.
 
 Click the **Add Account** button and complete the Details for account newuser dialog box:
 1. Login Name: **newspaper_search_results_user**
