@@ -186,34 +186,21 @@ The columns in the table you created should match what is above.
 A user is an account that has permission to connect to a database. Below, we are adding a new user so that this account connects only to the new database. Using this user account for one connection to this database limits exposure to other databases in case the password for this user is compromised. Giving a user the least privileges it needs to perform what you need it to do reduces the risk if someone else learns your user's password. For example, if a user can only read a database, it is less of a risk if the password is cracked than for a user that can also change or delete the database.
 
 
-Click the **Add Account** button and complete the Details for account newuser dialog box:
-1. Login Name: **newspaper_search_results_user**
-2. Authentication Type: select **Standard**
-3. Limit to Hosts Matching: **localhost**
-4. Enter and confirm a password *SomethingDifficult*
-5. Click on the **Administrative Roles** tab.  Make sure nothing is checked.  This account is for accessing the database only.
-6. Click on the **Schema Privileges** tab and click **Add Entry**
-7. In the **New Schema Privilege Definition** diablog box, click the **Selected schema:** radio button and select **newspaper_search_results**.
-8. Click all of the Object Rights: SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW as per the image below. (This user will need to do many things later in the lesson so we are giving it many rights.)
-9. Click the **Apply** button.
+The user we will create will have these characteristics:
+1. Login Name: **newspaper_user**
+2. Authentication Type: **Standard**
+3. Limit to Hosts Matching: **localhost**. This user can't be used to access the database from another computer.
+4. Password: *SomethingDifficult*. Change this password to a dfficult to crack password. Write the password down and use it in place of *SomethingDifficult* when you see that later in the lesson.
+5. **Object Rights**: SELECT, INSERT, UPDATE, SHOW VIEW. (This user will need to do many things later in the lesson so we are giving it many rights.)
+6. No **Administrative Roles**. This account is for accessing the database only.
 
-{% include figure.html filename="getting-started-with-mysql-2.png" caption="Setting permissions for new account" %}
-
-### Schema Privileges not displaying
-
-Some Mac computers, like my testing laptop, don't display the **Schema Privileges** panel correctly.  In that case, you can accomplish the above with a script using the Query Window.  
-
-If you have already created the user above run this command to grant the user privileges:
-
+To create the user, at the **mysql>** prompt enter:
 ```
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW ON newspaper_search_results.* TO 'newspaper_search_results_user'@'localhost';
+CREATE USER 'newspaper_user'@'localhost' IDENTIFIED BY 'SomethingDifficult';
 ```
-
-If you have not created a user yet run these two commands to create the user and then grant the user privileges:
-
+To grant the user Object Rights to access database newspaper_search_results, at the **mysql>** prompt enter:
 ```
-CREATE USER 'newspaper_search_results_user'@'localhost' IDENTIFIED BY 'SomethingDifficult';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW ON newspaper_search_results.* TO 'newspaper_search_results_user'@'localhost';
+GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON newspaper_search_results.* TO 'newspaper_user'@'localhost';
 ```
 
 ### MySQL version 8 and user Authentication Type.
@@ -235,6 +222,7 @@ Go to File > New File > R Script, then save that new file with the name newspape
 
 We will use the RMariaDB package to connect to MySQL.  (If you're curious, documentation for the RMariaDB package is [here](https://cran.r-project.org/web/packages/RMariaDB/RMariaDB.pdf).)
 
+Before we install 
 
 If you don't have the library RMariaDB installed (which is likely, if this is the first time you're using RStudio), install it using the RStudio Console.  After opening RStudio, copy and paste the following into the left window at the > prompt, then press enter:
 
