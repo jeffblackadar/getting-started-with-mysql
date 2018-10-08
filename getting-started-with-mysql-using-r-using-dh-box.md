@@ -202,16 +202,21 @@ To grant the user Object Rights to access database newspaper_search_results, at 
 ```
 GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON newspaper_search_results.* TO 'newspaper_user'@'localhost';
 ```
+### Verify the newly created user
 
-### MySQL version 8 and user Authentication Type.
-
-When a user is created in MySQL 8 Workbench the **Authentication Type** is defaulted to **caching_sha2_password**. That type of authentication causes an error for the R package we will use to connect to the database later in this lesson. The error is *Authentication plugin 'caching_sha2_password' cannot be loaded* and it is described in [Stack Overflow](https://stackoverflow.com/questions/49194719/authentication-plugin-caching-sha2-password-cannot-be-loaded).
-
-To avoid this error we can change the user's Authentication Type to Standard. To do this, run this command:
+At the **mysql>** prompt enter **SHOW GRANTS FOR 'newspaper_user'@'localhost';**
 
 ```
-ALTER USER 'newspaper_search_results_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'SomethingDifficult';
+mysql> SHOW GRANTS FOR 'newspaper_user'@'localhost';
++-----------------------------------------------------------------------------------------------------------------------+
+| Grants for newspaper_user@localhost                                                                                   |
++-----------------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'newspaper_user'@'localhost' IDENTIFIED BY PASSWORD '*A763D79E0FF91306B36ED8D70076D56364E236CA' |
+| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `newspaper_search_results`.* TO 'newspaper_user'@'localhost'               |
++-----------------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
 ```
+
 # Create an R Script that connects to the database
 
 Open RStudio, which you installed earlier in this lesson.  See the [RStudio](#rstudio) section. 
@@ -220,11 +225,30 @@ We'll now use RStudio to make a new R Script and save the script with the name n
 
 Go to File > New File > R Script, then save that new file with the name newspaper_search.R.
 
+## Preparing to install R package RMariaDB
+
 We will use the RMariaDB package to connect to MySQL.  (If you're curious, documentation for the RMariaDB package is [here](https://cran.r-project.org/web/packages/RMariaDB/RMariaDB.pdf).)
 
-Before we install 
+Before we install, we need to install the libmariadbclient-dev, software the RMariaDB package will use to connect the MySQL.
 
-If you don't have the library RMariaDB installed (which is likely, if this is the first time you're using RStudio), install it using the RStudio Console.  After opening RStudio, copy and paste the following into the left window at the > prompt, then press enter:
+Go to the Command Line in DH Box.  If you see the mysql> prompt you are in a MySQL session.  We need to leave that in order to do the installation, so that the mysql> prompt, type **quit**.
+
+```
+mysql> quit
+Bye
+```
+
+Update the packages on DH Box using **sudo apt-get update**.
+```
+demonstration@07759f23c7be:~$ sudo apt-get update
+```
+Entering **sudo apt-get install libmariadbclient-dev** will install the database connection client we need for RMariaDB.
+```
+demonstration@07759f23c7be:~$ sudo apt-get install libmariadbclient-dev
+```
+## Installing R package RMariaDB
+
+RMariaDB will be installed using the RStudio Console.  After opening RStudio, copy and paste the following into the left window at the > prompt, then press enter:
 
 ```
 install.packages("RMariaDB")
@@ -240,7 +264,7 @@ library(RMariaDB)
 
 We will connect to the database at first using a password. (Later we'll use a better way to connect.)  For now, we will use a variable to store the password.  Each time you start R you'll need to reset this variable, but that is better than publishing a hardcoded password if you share your programs, like you may do using GitHub.
 
-In the RStudio console type the command below, replacing *SomethingDifficult* with the password you created for newspaper_search_results_user in the steps you did above to add a user to connect to the database.
+In the RStudio console type the command below, replacing *SomethingDifficult* with the password you created for newspaper_user in the steps you did above to add a user to connect to the database.
 
 ```
 localuserpassword <- "SomethingDifficult"
@@ -254,9 +278,9 @@ To run this script, select all the text and click the Run button. (There are oth
 ```
 library(RMariaDB)
 # The connection method below uses a password stored in a variable.  
-# To use this set localuserpassword="The password of newspaper_search_results_user" 
+# To use this set localuserpassword="The password of newspaper_user" 
 
-storiesDb <- dbConnect(RMariaDB::MariaDB(), user='newspaper_search_results_user', password=localuserpassword, dbname='newspaper_search_results', host='localhost')
+storiesDb <- dbConnect(RMariaDB::MariaDB(), user='newspaper_user', password=localuserpassword, dbname='newspaper_search_results', host='localhost')
 dbListTables(storiesDb)
 dbDisconnect(storiesDb)
 ```
@@ -277,10 +301,10 @@ The above example to connect is one way to make a connection.  The connection me
 
 #### Create the .cnf file to store the MySQL database connection information
 
-1. Open a text editor, like notepad, nano or TextEdit, and paste in the items below, changing the password to the one you created for newspaper_search_results_user in the steps you did above to add a user to connect to the database.
+1. Open a text editor, like notepad, nano or TextEdit, and paste in the items below, changing the password to the one you created for newspaper_user in the steps you did above to add a user to connect to the database.
 ```
 [newspaper_search_results]
-user=newspaper_search_results_user
+user=newspaper_user
 password=SomethingDifficult
 host=127.0.0.1
 port=3306
@@ -318,10 +342,23 @@ You have successfully connected to the database using a configuration file.
 
 # Storing data in a table with SQL
 
-In this section of the lesson we'll create a SQL statement to insert a row of data into the database table about this [newspaper story](http://newspapers.library.wales/view/4121281/4121288/94/).  We'll insert the record first in MySQL workbench and later we'll do it in R.
+In this section of the lesson we'll create a SQL statement to insert a row of data into the database table about this [newspaper story](http://newspapers.library.wales/view/4121281/4121288/94/).  We'll insert the record first in MySQL and later we'll do it in R.
 
-1. In MySQL Workbench, click the icon labelled SQL+ to create a new SQL tab for executing queries.
-2. Paste this statement below into the query window. This will insert a record into the table.
+Begin a MySQL session. At the Command Line prompt, enter **sudo mysql** to start MySQL.
+```
+demonstration@07759f23c7be:~$ sudo mysql
+[sudo] password for demonstration: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+(etc.)
+```
+
+Tell MySQL that you are using the newspaper_search_results database.
+
+```
+mysql> use newspaper_search_results;
+```
+
+Enter the statement below at the MySQL> prompt. This will insert a record into the table.
 ```
 INSERT INTO tbl_newspaper_search_results (
 story_title,
@@ -333,9 +370,6 @@ VALUES('THE LOST LUSITANIA.',
 LEFT(RTRIM('http://newspapers.library.wales/view/4121281/4121288/94/'),99),
 'German+Submarine');
 ```
-3. Click the lightening bolt icon in the SQL tab to execute the SQL statement.
-
-{% include figure.html filename="getting-started-with-mysql-3.png" caption="Inserting a record into a table using MySQL Workbench" %}
 
 ## Explanation of the INSERT statement
 
@@ -374,9 +408,17 @@ In this section of the lesson we'll create a SQL statement to select a row of da
 ```
 SELECT story_title FROM tbl_newspaper_search_results;
 ```
-2. Highlight the SELECT statement and click the lightening bolt icon in the SQL tab to execute it. You should see the story title "THE LOST LUSITANIA." in the Result Grid. See below.
-
-{% include figure.html filename="getting-started-with-mysql-4.png" caption="Selecting records from a table using MySQL Workbench" %}
+Your results should look like this:
+```
+mysql> SELECT story_title FROM tbl_newspaper_search_results;
++---------------------+
+| story_title         |
++---------------------+
+| THE LOST LUSITANIA. |
++---------------------+
+1 row in set (0.00 sec)
+mysql>
+```
 
 Optional: Modify the SELECT statement above by changing the fields selected and run it again. Add more than one field to the SELECT statement and run it:
 ```
@@ -429,17 +471,19 @@ In the script above we do two steps to insert a record:
 1. Define the INSERT statement in the line beginning with: query<-"INSERT INTO tbl_newspaper_search_results (
 2. Execute the INSERT statement stored in the query variable with: rsInsert <- dbSendQuery(storiesDb, query)
 
-Run the script above in R Studio and then execute a SELECT in MySQL Workbench. Do you see the new record you added?
+Run the script above in R Studio and then execute a SELECT in MySQL. Do you see the new record you added?
 
 ### Clean up the test data
 
-At this point you likely have more than one record with the story title of "THE LOST LUSITANIA." which is fine for testing, but we don't want duplicate data. We will remove the test data and start again.  Using the query window in MySQL Workbench run this SQL statement:
+At this point you likely have more than one record with the story title of "THE LOST LUSITANIA." which is fine for testing, but we don't want duplicate data. We will remove the test data and start again.  Using MySQL in the Command Line this SQL statement:
 ```
 TRUNCATE tbl_newspaper_search_results;
 ```
-In the Action Output pane of MySQL Workbench you should see:
+As output you should see:
 ```
-TRUNCATE tbl_newspaper_search_results	0 row(s) affected	0.015 sec
+mysql> TRUNCATE tbl_newspaper_search_results;
+Query OK, 0 rows affected (0.00 sec)
+mysql> 
 ```
 To practice what we just did:
 1. Run a SELECT statement again.  You should not get any rows back.
@@ -537,7 +581,7 @@ entryTitle <- "THE LOST LUSITANIA'S RUDDER."
 # change a single apostrophe into a double apostrophe
 entryTitle <- gsub("'", "''", entryTitle)
 ```
-Now that you have handled the apostrophe in the title of the story, re-run the R program and then check with a SELECT statement in MySQL workbench.
+Now that you have handled the apostrophe in the title of the story, re-run the R program and then check with a SELECT statement in MySQL.
 
 ```
 SELECT * FROM newspaper_search_results.tbl_newspaper_search_results WHERE story_title = "THE LOST LUSITANIA'S RUDDER.";
@@ -621,7 +665,7 @@ dbWriteTable(storiesDb, value = sampleSubmarineData, row.names = FALSE, name = "
 dbDisconnect(storiesDb)
 
 ```
-If you run this more than once, you will have duplicate records.  If that happens, just TRUNCATE the table and run the program again, but only once.  You can check that you have the right number of records.  In MySQL Workbench run this in the query window:
+If you run this more than once, you will have duplicate records.  If that happens, just TRUNCATE the table and run the program again, but only once.  You can check that you have the right number of records.  In MySQL this query:
 
 ```
 SELECT COUNT(*) FROM tbl_newspaper_search_results;
