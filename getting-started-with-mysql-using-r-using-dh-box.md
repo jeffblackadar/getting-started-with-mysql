@@ -310,7 +310,7 @@ host=127.0.0.1
 port=3306
 database=newspaper_search_results
 ```
-2. Save this file somewhere outside of your R working directory.  I saved mine in the same folder as other MySQL settings files.  On my PC machine this was: C:\ProgramData\MySQL\MySQL Server 5.7\  Depending on your operating system and version of MySQL this location may be somewhere else. On a Mac I used /Users/blackadar/Documents/ as the folder.  I have tested putting this file in different places, it just needs to be somewhere R can locate it when the program runs. Name the file **newspaper_search_results.cnf**.
+2. Save this file somewhere outside of your R working directory.  I have tested putting this file in different places, it just needs to be somewhere R can locate it when the program runs. In DH Box open the File Manager. Click the New Folder button and name the folder cnf. Name the file **newspaper_search_results.cnf** and save it in the cnf folder.
 
 3. Update the newspaper_search.R program above to connect to the database using the configuration file.
 
@@ -319,7 +319,7 @@ library(RMariaDB)
 # The connection method below uses a password stored in a settings file.  
 
 # R needs a full path to find the settings file.
-rmariadb.settingsfile<-"C:\\ProgramData\\MySQL\\MySQL Server 8.0\\newspaper_search_results.cnf"
+rmariadb.settingsfile<-"/home/demonstration/cnf/newspaper_search_results.cnf"
 
 rmariadb.db<-"newspaper_search_results"
 storiesDb<-dbConnect(RMariaDB::MariaDB(),default.file=rmariadb.settingsfile,group=rmariadb.db) 
@@ -435,7 +435,7 @@ library(RMariaDB)
 # The connection method below uses a password stored in a settings file.  
 
 # R needs a full path to find the settings file.
-rmariadb.settingsfile<-"C:\\ProgramData\\MySQL\\MySQL Server 8.0\\newspaper_search_results.cnf"
+rmariadb.settingsfile<-"/home/demonstration/cnf/newspaper_search_results.cnf"
 
 rmariadb.db<-"newspaper_search_results"
 storiesDb<-dbConnect(RMariaDB::MariaDB(),default.file=rmariadb.settingsfile,group=rmariadb.db) 
@@ -499,7 +499,7 @@ library(RMariaDB)
 # The connection method below uses a password stored in a settings file.  
 
 # R needs a full path to find the settings file.
-rmariadb.settingsfile<-"C:\\ProgramData\\MySQL\\MySQL Server 8.0\\newspaper_search_results.cnf"
+rmariadb.settingsfile<-"/home/demonstration/cnf/newspaper_search_results.cnf"
 
 rmariadb.db<-"newspaper_search_results"
 storiesDb<-dbConnect(RMariaDB::MariaDB(),default.file=rmariadb.settingsfile,group=rmariadb.db) 
@@ -634,7 +634,7 @@ We're not ready to run dbWriteTable() yet, we need to connect to the database fi
 
 ```
 library(RMariaDB)
-rmariadb.settingsfile<-"C:\\ProgramData\\MySQL\\MySQL Server 8.0\\newspaper_search_results.cnf"
+rmariadb.settingsfile<-"/home/demonstration/cnf/newspaper_search_results.cnf"
 
 rmariadb.db<-"newspaper_search_results"
 storiesDb<-dbConnect(RMariaDB::MariaDB(),default.file=rmariadb.settingsfile,group=rmariadb.db) 
@@ -679,7 +679,7 @@ The script below queries the database and produces the line graph plot below.  R
 
 ```
 library(RMariaDB)
-rmariadb.settingsfile<-"C:\\ProgramData\\MySQL\\MySQL Server 8.0\\newspaper_search_results.cnf"
+rmariadb.settingsfile<-"/home/demonstration/cnf/newspaper_search_results.cnf"
 
 rmariadb.db<-"newspaper_search_results"
 storiesDb<-dbConnect(RMariaDB::MariaDB(),default.file=rmariadb.settingsfile,group=rmariadb.db) 
